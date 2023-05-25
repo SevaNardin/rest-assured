@@ -2,10 +2,12 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 import pojos.UserPojo;
+import pojos.UserPojoFull;
 
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 /**
@@ -34,7 +36,8 @@ public class RestTest {
                 .basePath("/users")
                 .contentType(ContentType.JSON)
                 .when().get().then()
-                .statusCode(200).extract().jsonPath().getList("data.email");
+                .statusCode(200)
+                .extract().jsonPath().getList("data.email");
 
         System.out.println(emails.stream().toList());
 
@@ -45,7 +48,7 @@ public class RestTest {
     void getUserListPojo() {
         // получаем список емэйл пользователей
         // десереализация ответа в объект + lombok(геттеры и сеттеры)
-        List<UserPojo> data =  given()
+        List<UserPojo> users =  given()
                 .baseUri("https://reqres.in/api")
                 .basePath("/users")
                 .contentType(ContentType.JSON).log().all()
@@ -54,6 +57,40 @@ public class RestTest {
                 .jsonPath()
                 .getList("data", UserPojo.class);
 
-        System.out.println(data);
+        System.out.println(users);
+    }
+
+    @Test
+    void getUserListPojoFull() {
+        // получаем список емэйл пользователей
+        // десереализация ответа в объект + lombok(геттеры и сеттеры)
+        List<UserPojoFull> users =  given()
+                .baseUri("https://reqres.in/api")
+                .basePath("/users")
+                .contentType(ContentType.JSON).log().all()
+                .when().get().then()
+                .statusCode(200).extract()
+                .jsonPath()
+                .getList("data", UserPojoFull.class);
+
+        System.out.println(users);
+
+        assertThat(users).extracting(UserPojoFull::getEmail).contains("george.bluth@reqres.in");
+    }
+
+    @Test
+    void createUser() {
+        // получаем список емэйл пользователей
+        // десереализация ответа в объект + lombok(геттеры и сеттеры)
+        List<UserPojo> users =  given()
+                .baseUri("https://reqres.in/api")
+                .basePath("/users")
+                .contentType(ContentType.JSON).log().all()
+                .when().get().then()
+                .statusCode(200).extract()
+                .jsonPath()
+                .getList("data", UserPojo.class);
+
+        System.out.println(users);
     }
 }

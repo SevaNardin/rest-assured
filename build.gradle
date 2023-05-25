@@ -50,7 +50,8 @@ dependencies {
             "org.aeonbits.owner:owner:$ownerVersion",
             "io.rest-assured:rest-assured:$restAssuredVersion",
             "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion",
-            "com.github.javafaker:javafaker:$fakerVersion"
+            "com.github.javafaker:javafaker:$fakerVersion",
+            "org.assertj:assertj-core:3.24.2"
     )
     testRuntimeOnly 'org.slf4j:slf4j-simple:2.0.7'
     testCompileOnly 'org.projectlombok:lombok:1.18.26'
