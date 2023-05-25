@@ -16,6 +16,6 @@ public class DateDeserializer extends JsonDeserializer<LocalDateTime> {
     @Override
     public LocalDateTime deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException, JacksonException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'hh:mm:ss.SSSZ");
-        return LocalDateTime.parse(jsonParser.getText());
+        return LocalDateTime.parse(jsonParser.getText(), formatter);
     }
 }
