@@ -2,12 +2,14 @@ import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import pojos.CreateUserRequest;
 import pojos.CreateUserResponse;
 import pojos.UserPojo;
 import pojos.UserPojoFull;
 import steps.UserSteps;
+import utils.RestWrapper;
 import utils.UserGenerator;
 
 import java.util.List;
@@ -20,6 +22,13 @@ import static org.hamcrest.Matchers.equalTo;
  * @author NardinVN
  */
 public class RestTest {
+
+    private static RestWrapper api;
+
+    @BeforeAll
+    public static void prepareClient() {
+        api = RestWrapper.loginAs("eve.holt@reqres.in", "cityslicka");
+    }
 
     private static final RequestSpecification SPEC =
             new RequestSpecBuilder()
@@ -72,8 +81,12 @@ public class RestTest {
     void getUserListPojoFull() {
         // получаем список емэйл пользователей
         // десереализация ответа в объект + lombok(геттеры и сеттеры)
-        List<UserPojoFull> users = UserSteps.getUsers();
-        assertThat(users).extracting(UserPojoFull::getEmail).contains("george.bluth@reqres.in");
+//        List<UserPojoFull> users = UserSteps.getUsers();
+//        assertThat(users).extracting(UserPojoFull::getEmail).contains("george.bluth@reqres.in");
+
+        assertThat(api.userService.getUsers()).extracting(UserPojoFull::getEmail).contains("george.bluth@reqres.in");
+
+        System.out.println(api.userService.getUsers());
     }
 
     @Test
@@ -100,10 +113,14 @@ public class RestTest {
 //                .build();
 
         // 3 способ
-        CreateUserRequest rq = UserGenerator.createUser();
+//        CreateUserRequest rq = UserGenerator.createUser();
+//
+//        UserSteps userSteps = new UserSteps();
+//        CreateUserResponse rs = userSteps.createUser(rq);
 
-        UserSteps userSteps = new UserSteps();
-        CreateUserResponse rs = userSteps.createUser(rq);
+        // 4
+        CreateUserRequest rq = UserGenerator.createUser();
+        CreateUserResponse rs = api.userService.createUser(rq);
 
         // проверяем то что указали
         assertThat(rs)

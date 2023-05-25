@@ -11,19 +11,18 @@ import java.time.LocalDateTime;
 
 /**
  * @author NardinVN
+ *
+ * Можно унаследовать часть полей от CreateUserRequest
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CreateUserResponse {
     @JsonProperty
     private String name;
-
     @JsonProperty
     private String job;
-
     @JsonProperty
     private int id;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'hh:mm:ss.SSSZ")
     @JsonDeserialize(using = DateDeserializer.class)
     private LocalDateTime createAdt;
