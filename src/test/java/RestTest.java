@@ -8,6 +8,7 @@ import pojos.CreateUserResponse;
 import pojos.UserPojo;
 import pojos.UserPojoFull;
 import steps.UserSteps;
+import utils.UserGenerator;
 
 import java.util.List;
 
@@ -77,19 +78,32 @@ public class RestTest {
 
     @Test
     void createUser() {
-        // создаем запрос на создание юзера
-        CreateUserRequest rq = new CreateUserRequest();
-        rq.setJob("driver");
-        rq.setName("Seva");
+        // создаем запрос на создание юзера 1 способ
+//        CreateUserRequest rq = new CreateUserRequest();
+//        rq.setJob("driver");
+//        rq.setName("Seva");
 
         // отправляем запрос в виде json
-        CreateUserResponse rs = given()
-                .spec(SPEC)
-                .log().all()
-                .body(rq)
-                .when().post()
-                .then()
-                .extract().as(CreateUserResponse.class);
+//        CreateUserResponse rs = given()
+//                .spec(SPEC)
+//                .log().all()
+//                .body(rq)
+//                .when().post()
+//                .then()
+//                .extract().as(CreateUserResponse.class);
+
+        // 2 способ
+//        CreateUserRequest rq = CreateUserRequest
+//                .builder()
+//                .name("Seva")
+//                .job("driver")
+//                .build();
+
+        // 3 способ
+        CreateUserRequest rq = UserGenerator.createUser();
+
+        UserSteps userSteps = new UserSteps();
+        CreateUserResponse rs = userSteps.createUser(rq);
 
         // проверяем то что указали
         assertThat(rs)
